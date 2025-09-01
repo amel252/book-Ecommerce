@@ -2,6 +2,8 @@ import React from "react";
 import asyncHandler from "../middleware/asyncHandler";
 import Product from "../models/productModel";
 
+// --------------------CRUD product-----------------------
+
 // get all product (public visité par tout le monde)
 
 // on ne met pas next il est déja inclu dans asyncHan
@@ -71,11 +73,47 @@ const deleteProduct = asyncHandler(async (req, res) => {
         throw new Error("produit non trouvé");
     }
 });
+// ---------------- review ---
+const createProductReview = asyncHandler(async (req, res) => {
+    const { rating, comment } = req.body;
+    // on veut récuperer les produits
+    const product = await Product.findById(req.params.id);
+    // si le produit est déja évalué , on vérifie la valeur déja stocké en BDD et la nouvelle valeur donné
+    if (product) {
+        const alreadyReviewed = product.reviews.find(
+            (review) => review.user.toString() === req.user._id.toString()
+        );
+        if (alreadyReviewed) {
+            res.status(404);
+            throw new Error("Produit déja évalué");
+        }
+        const review = {
+            name: req.user.name,
+            rating: Number(rating),
+            comment,
+            user: req.user._id,
+        };
+        product.reviews.push(review);
+        product.numberReviews = product.reviews.lengh;
 
+        product.rating = product.reviews.reduce(
+            (acc, review) => acc + review.rating,
+            0
+        );
+        product.reviews.lenght;
+
+        await product.save();
+        res.status(201).json({ message: " L'ajout d'une évaluation réussie" });
+    } else {
+        res.status(404);
+        throw new Error("Produit non trouvé ");
+    }
+});
 export {
     getProducts,
     getProductById,
     createProduct,
     updateProduct,
     deleteProduct,
+    createProductReview,
 };

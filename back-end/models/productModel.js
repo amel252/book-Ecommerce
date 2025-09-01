@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 // model pour les avis :
-const reviewsSchema = new mongoose.Schema(
+const reviewSchema = new mongoose.Schema(
     {
         user: {
             type: mongoose.Schema.Types.ObjectId,
@@ -53,7 +53,7 @@ const productSchema = new mongoose.Schema(
             required: true,
         },
         // contenu de l'avis
-        reviews: [reviewsSchema],
+        reviews: [reviewSchema],
         // note d'évaluation
         rating: {
             type: Number,
