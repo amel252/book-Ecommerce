@@ -20,3 +20,4 @@ router
     .put(updateProduct)
     .delete(deleteProduct);
 router.route("/:id/reviews").post(createProductReview);
+export default router;

@@ -1,6 +1,6 @@
 import React from "react";
-import asyncHandler from "../middleware/asyncHandler";
-import Product from "../models/productModel";
+import asyncHandler from "../middleware/asyncHandler.js";
+import Product from "../models/productModel.js";
 
 // --------------------CRUD product-----------------------
 
