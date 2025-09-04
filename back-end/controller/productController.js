@@ -13,7 +13,7 @@ const getProducts = asyncHandler(async (req, res) => {
 });
 // get Single Product (public)
 const getProductById = asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params._id);
+    const product = await Product.findById(req.params.id);
     if (product) {
         return res.json(product);
     } else {
@@ -64,7 +64,7 @@ const updateProduct = asyncHandler(async (req, res) => {
 
 // delete product (admin private)
 const deleteProduct = asyncHandler(async (req, res) => {
-    const product = await Product.findById(req.params._id);
+    const product = await Product.findById(req.params.id);
     if (product) {
         // on supprime a travers son id
         await Product.deleteOne({ _id: product.id });

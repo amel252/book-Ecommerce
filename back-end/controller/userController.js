@@ -49,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error("L'utilisateur est déja inscrit");
     }
     //si l'user n'existe pas on le crée
-    const user = await user.create({
+    const user = await User.create({
         name,
         email,
         password,
@@ -79,7 +79,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "Déconnexion reussi" });
 });
 
-// --------------get user profile (private)-------------------
+// --------------get user profile (private)-
 
 const getUserProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
@@ -174,7 +174,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 // ---l'admin va récuperer l'user a traver son id (private admin )--
 const getUserById = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params._id).select("-password");
+    const user = await User.findById(req.params.id).select("-password");
     // si existe
     if (user) {
         res.status(200).json(user);
@@ -186,7 +186,7 @@ const getUserById = asyncHandler(async (req, res) => {
 // ----L'admin va mettre a jour un user --
 
 const updateUser = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params._id);
+    const user = await User.findById(req.params.id);
     // si n'existe pas
     if (!user) {
         res.status(400);
@@ -214,10 +214,10 @@ const updateUser = asyncHandler(async (req, res) => {
     }
     const updatedUser = await user.save();
     res.status(200).json({
-        _id: updateUser._id,
-        name: updateUser.name,
-        email: updateUser.email,
-        isAdmin: updateUser.isAdmin,
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
     });
 });
 export {

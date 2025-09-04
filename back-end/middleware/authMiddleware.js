@@ -6,11 +6,11 @@ import User from "../models/userModel.js";
 const protect = asyncHandler(async (req, res, next) => {
     let token;
     //assigné le token de l'user a notre variable token
-    token = req.cookies.jtw;
+    token = req.cookies.jwt;
     // si token existe :
     if (token) {
         try {
-            const decoded = jtw.verify(token, process.env.JTW_SECRET);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = await User.findById(decoded.userId).select("-password");
             next();
         } catch (error) {
