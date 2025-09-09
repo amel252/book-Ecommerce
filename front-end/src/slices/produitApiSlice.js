@@ -56,6 +56,6 @@ export const {
     useCreateProductMutation,
     useGetProductDetailsQuery,
     useUpdateProductMutation,
-    useDeleteeProductMutation,
+    useDeleteProductMutation,
     useCreateReviewMutation,
 } = productApiSlice;
