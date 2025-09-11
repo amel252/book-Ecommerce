@@ -1,0 +1,23 @@
+import React from "react";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+
+function Rating(value, text) {
+    return (
+        <div className="flex items-center space-x-1 text-yellow-400">
+            {/* les valeur de evaluation  */}
+            {[1, 2, 3, 4, 5].map((i) => (
+                <span key={i} className="text-lg sm:text-xl">
+                    {value >= i ? (
+                        <FaStar size={15} />
+                    ) : value <= i - 0.5 ? (
+                        <FaStarHalfAlt size={15} />
+                    ) : (
+                        <FaRegStar size={15} />
+                    )}
+                </span>
+            ))}
+            {text && <span className="text-sm text-gray-600 ml-2">{text}</span>}
+        </div>
+    );
+}
+export default Rating;
