@@ -12,7 +12,7 @@ import {
     FaTimes,
 } from "react-icons/fa";
 
-export default function Header() {
+function Header() {
     const { userInfo } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -31,8 +31,9 @@ export default function Header() {
     };
 
     return (
-        <header className="bg-primary text-white">
+        <header className="bg-orange-700 text-white">
             <div className="container mx-auto flex items-center justify-between p-4">
+                {/* Logo */}
                 <Link
                     to="/"
                     className="flex items-center gap-2 text-lg font-bold"
@@ -49,25 +50,30 @@ export default function Header() {
                     </button>
                 </div>
                 <div
-                    className={`${
-                        menuOpen ? "block" : "hidden"
-                    } md:flex md:items-center md:gap-4 absolute md:relative top-16 md:top-0 w-full md:w-auto bg-primary md:bg-transparent z-50`}
+                    className={`
+                    ${menuOpen ? "flex" : "hidden"} 
+                    flex-col md:flex md:flex-row md:items-center md:gap-4
+                    absolute md:static
+                    top-16 left-0 
+                    w-full md:w-auto 
+                    bg-orange-700 md:bg-transparent
+                    z-50
+                 `}
                 >
                     <Link
                         to="/cart"
                         className="relative flex items-center gap-2 p-2 md:p-0"
                     >
-                        <FaShoppingCart />
-                        Panier
+                        <FaShoppingCart /> Panier
                     </Link>
+
                     {userInfo ? (
                         <div className="relative">
                             <Link
                                 to="/profile"
-                                className="flex items-center gap-1 p-2 md:p-0 focus:outline-none "
+                                className="flex items-center gap-1 p-2 md:p-0 focus:outline-none"
                             >
-                                <FaUser />
-                                {userInfo.name}
+                                <FaUser /> {userInfo.name}
                             </Link>
                         </div>
                     ) : (
@@ -75,12 +81,59 @@ export default function Header() {
                             to="/login"
                             className="flex items-center gap-1 p-2 md:p-0"
                         >
-                            <FaUser />
-                            Connexion
+                            <FaUser /> Connexion
                         </Link>
+                    )}
+                    {userInfo && userInfo.isAdmin && (
+                        <div className="relative">
+                            <button
+                                className="flex items-center gap-1 border-gray-500
+                                     rounded-md hover:border-gray-500 hover:bg-gray-100 hover:text-black transition-all p-1 max-md:mx-2"
+                                onClick={() => setAdminOpen(!adminOpen)}
+                            >
+                                <FaChevronDown className="mt-0.5" />
+                            </button>
+                            {adminOpen && (
+                                <div
+                                    className="absolute right-0 mt-2 w-48 bg-white
+                                         text-gray-700 shadow-lg rounded-lg z-50"
+                                >
+                                    <Link
+                                        onClick={() => setAdminOpen(false)}
+                                        to="/admin/productlist"
+                                        className="block px-4 py-2 hover:bg-gray-100"
+                                    >
+                                        Produits
+                                    </Link>
+                                    <Link
+                                        onClick={() => setAdminOpen(false)}
+                                        to="/admin/orderlist"
+                                        className="block px-4 py-2 hover:bg-gray-100"
+                                    >
+                                        Commandes
+                                    </Link>
+                                    <Link
+                                        onClick={() => setAdminOpen(false)}
+                                        to="/admin/userlist"
+                                        className="block px-4 py-2 hover:bg-gray-100"
+                                    >
+                                        Utilisateurs
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    {userInfo ? (
+                        <Link onClick={logoutHandler} className="p-2">
+                            <FaSignOutAlt />
+                        </Link>
+                    ) : (
+                        ""
                     )}
                 </div>
             </div>
         </header>
     );
 }
+
+export default Header;
