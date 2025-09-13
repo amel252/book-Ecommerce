@@ -36,7 +36,7 @@ function Product({ product }) {
                     </div>
                 </div>
                 <Link
-                    className="flex items-center justify-center gap-2 w-full rounded-lg bg-white border-2 border-primary font-semibold transition hover:bg-primary hover:text-white"
+                    className="flex items-center justify-center gap-2 p-2 w-full rounded-lg bg-white border-2 border-primary font-semibold transition hover:bg-primary hover:text-white"
                     to={`/product/${product.id}`}
                 >
                     <FaEye size={20} />
