@@ -25,28 +25,28 @@ export const productApiSlice = apiSlice.injectEndpoints({
                 url: { PRODUCTS_URL },
                 method: "POST",
             }),
-            invalidatesTags: ["product"],
+            invalidatesTags: [product],
         }),
         updateProduct: builder.mutation({
             query: (data) => ({
                 url: `${PRODUCTS_URL}/${data.productId}`,
                 method: "PUT",
             }),
-            invalidatesTags: ["product"],
+            invalidatesTags: [product],
         }),
         deleteProduct: builder.mutation({
             query: (productId) => ({
                 url: `${PRODUCTS_URL}/${data.productId}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ["product"],
+            invalidatesTags: [product],
         }),
         createReview: builder.mutation({
             query: (data) => ({
                 url: `${PRODUCTS_URL}/${data.productId}/reviews`,
                 method: "POST",
             }),
-            invalidatesTags: ["product"],
+            invalidatesTags: [product],
         }),
     }),
 });
