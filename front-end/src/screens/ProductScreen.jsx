@@ -109,6 +109,43 @@ function ProductScreen() {
                                             : "Out of stock"}
                                     </span>
                                 </p>
+                                {product.countInStock > 0 && (
+                                    <div className="mt-4">
+                                        <label
+                                            className="block text-gray-700 font-semibold"
+                                            htmlFor="qty"
+                                        >
+                                            Quatité
+                                        </label>
+                                        <select
+                                            className="w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            value={qty}
+                                            name=""
+                                            id="qty"
+                                            onChange={(e) =>
+                                                setQty(Number(e.target.value))
+                                            }
+                                        >
+                                            {/* je fait l'actualisation de mon stock */}
+                                            {[
+                                                ...Array(
+                                                    product.countInStock
+                                                ).keys(),
+                                            ].map((x) => {
+                                                <option
+                                                    key={x + 1}
+                                                    value={x + 1}
+                                                >
+                                                    {""} {x + 1}
+                                                </option>;
+                                            })}
+                                                    <button className={`w-full mt-6 py-3 rounded-lg font-semibold 
+                                                    ${product.countInStock === 0 ? "bg-gray-300 cursor-not-ammowed": disabled={product.countInStock ===0 }
+
+                                                    }`}></button>
+                                        </select>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
