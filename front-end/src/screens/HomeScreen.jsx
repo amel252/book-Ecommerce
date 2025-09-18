@@ -44,7 +44,7 @@ function HomeScreen() {
                 <div className="px-4 py-6">
                     <SearchBox
                         keyword={keyword}
-                        onChange={(e) => setKeyword(e.target.value)}
+                        setKeyword={setKeyword}
                         onSearch={handleSearch}
                     />
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">

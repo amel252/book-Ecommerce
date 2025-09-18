@@ -115,10 +115,12 @@ function ProductScreen() {
                                             className="block text-gray-700 font-semibold"
                                             htmlFor="qty"
                                         >
-                                            Quatité
+                                            Quantité
                                         </label>
                                         <select
-                                            className="w-full border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full border rounded 
+                                focus:outline-none focus:ring-2
+                                 focus:ring-blue-500"
                                             value={qty}
                                             name=""
                                             id="qty"
@@ -126,27 +128,75 @@ function ProductScreen() {
                                                 setQty(Number(e.target.value))
                                             }
                                         >
-                                            {/* je fait l'actualisation de mon stock */}
+                                            {/* erreur dans le retour  */}
                                             {[
                                                 ...Array(
                                                     product.countInStock
                                                 ).keys(),
-                                            ].map((x) => {
+                                            ].map((x) => (
                                                 <option
                                                     key={x + 1}
                                                     value={x + 1}
                                                 >
-                                                    {""} {x + 1}
-                                                </option>;
-                                            })}
-                                                    <button className={`w-full mt-6 py-3 rounded-lg font-semibold 
-                                                    ${product.countInStock === 0 ? "bg-gray-300 cursor-not-ammowed": disabled={product.countInStock ===0 }
-
-                                                    }`}></button>
+                                                    {x + 1}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                 )}
+                                <button
+                                    className={`w-full mt-6 py-3 rounded-lg font-semibold
+                                     ${
+                                         product.countInStock === 0
+                                             ? "bg-gray-300 cursor-not-allowed"
+                                             : "bg-primary hover:bg-secondary text-white"
+                                     }`}
+                                    disabled={product.countInStock === 0}
+                                >
+                                    Ajouter dans le panier
+                                </button>
                             </div>
+                        </div>
+                        <div className="mt-8">
+                            <h2 className="text-2xl font-bold text-gray-900">
+                                Evaluations
+                            </h2>
+                            {product.review.lenght === 0 ? (
+                                <Message>Aucune evaluation trouvé</Message>
+                            ) : (
+                                <div className="mt-6 space-x-5">
+                                    {product.reviews.map((review) => (
+                                        <div
+                                            className="bg-white p-6 rounded-lg shadow-sm"
+                                            key={review._id}
+                                        >
+                                            <div className="flex items-center space-x-4">
+                                                <strong className="text-gray-900">
+                                                    {review.name}
+                                                </strong>
+                                                <Rating value={review.rating} />
+                                                <p className="text-sm text-gray-500">
+                                                    {review.createAt.substring(
+                                                        0,
+                                                        10
+                                                    )}
+                                                </p>
+                                            </div>
+                                            <p className="mt-2 text-gray-700">
+                                                {review.comment}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            {userInfo && isOpen && (
+                                <button
+                                    className="w-48 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-secondary mt-6"
+                                    onClick={() => setIsOpen(true)}
+                                >
+                                    Ajout d'une évaluation
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
