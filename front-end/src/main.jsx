@@ -11,6 +11,7 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen.jsx";
+import ProductScreen from "./screens/ProductScreen.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
                 path="/search/:keyword/page/:pageNumber"
                 element={<HomeScreen />}
             />
+            <Route path="/product/:id" element={<ProductScreen />} />
         </Route>
     )
 );

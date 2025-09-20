@@ -23,9 +23,9 @@ const getProducts = async (req, res) => {
               }
             : {};
         const count = await Product.countDocuments({ ...keyword });
-        const products = await Product.find({ ...keyword }).limit(
-            pageSize * (page - 1)
-        );
+        const products = await Product.find({ ...keyword })
+            .limit(pageSize)
+            .skip(pageSize * (page - 1));
         res.json({ products, page, pages: Math.ceil(count / pageSize) });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -38,7 +38,7 @@ const getProductById = asyncHandler(async (req, res) => {
         return res.json(product);
     } else {
         res.status(404);
-        throw new Errow("Produit non trouvé ");
+        throw new Error("Produit non trouvé ");
     }
 });
 
@@ -53,7 +53,7 @@ const createProduct = asyncHandler(async (req, res) => {
         description: "sample description  ",
         price: 0,
         rating: 0,
-        numberReviews: 0,
+        numReviews: 0,
         countInStock: 0,
     });
     const createProduct = await product.save();
@@ -114,13 +114,11 @@ const createProductReview = asyncHandler(async (req, res) => {
             user: req.user._id,
         };
         product.reviews.push(review);
-        product.numberReviews = product.reviews.lengh;
+        product.numReviews = product.reviews.lengh;
 
-        product.rating = product.reviews.reduce(
-            (acc, review) => acc + review.rating,
-            0
-        );
-        product.reviews.lenght;
+        product.rating =
+            product.reviews.reduce((acc, review) => acc + review.rating, 0) /
+            product.reviews.length;
 
         await product.save();
         res.status(201).json({ message: " L'ajout d'une évaluation réussie" });

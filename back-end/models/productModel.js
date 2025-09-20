@@ -61,7 +61,7 @@ const productSchema = new mongoose.Schema(
             default: 0,
         },
         // nombre d'avis
-        numberReviews: {
+        numReviews: {
             type: Number,
             required: true,
             default: 0,
