@@ -15,7 +15,7 @@ import {
 import { protect, admin } from "../middleware/authMiddleware.js";
 // je ne protege la page d'inscription est visieul par l'user
 router.route("/").post(registerUser).get(protect, admin, getUsers);
-router.post("logout", logoutUser);
+router.post("/logout", logoutUser);
 router.post("/auth", authUser);
 router
     .route("/profil")

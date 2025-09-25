@@ -1,4 +1,4 @@
-import { USERS_URL } from "../constants";
+import { USERS_URL } from "../constants.js";
 import { apiSlice } from "./apiSlice.js";
 
 export const usersApiSlice = apiSlice.injectEndpoints({
@@ -13,16 +13,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             keepUnusedDataFor: 5,
         }),
         register: builder.mutation({
-            query: () => ({
+            query: (data) => ({
                 url: `${USERS_URL}`,
                 method: "POST",
+                body: data,
             }),
         }),
         logout: builder.mutation({
-            query: (data) => ({
+            query: () => ({
                 url: `${USERS_URL}/logout`,
                 method: "POST",
-                body: data,
             }),
         }),
         profile: builder.mutation({

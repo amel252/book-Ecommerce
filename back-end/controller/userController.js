@@ -27,6 +27,8 @@ const authUser = asyncHandler(async (req, res) => {
 });
 // -------------------signUp user------------------
 const registerUser = asyncHandler(async (req, res) => {
+    console.log(req.body);
+
     const { name, email, password } = req.body;
     if (
         !validator.isStrongPassword(password, {
