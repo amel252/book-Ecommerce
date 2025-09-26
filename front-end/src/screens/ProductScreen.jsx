@@ -11,6 +11,7 @@ import Rating from "../components/Rating";
 import Message from "../components/Message";
 import { IoChevronBackCircleSharp } from "react-icons/io5";
 import { FaWindowClose } from "react-icons/fa";
+import { addToCart } from "../slices/cartSlice";
 
 function ProductScreen() {
     const [isOpen, setIsOpen] = useState(false);
@@ -45,6 +46,11 @@ function ProductScreen() {
             }).unwrap();
             toast.success("Avis créé avec succès");
         } catch (error) {}
+    };
+
+    const addToCartHandler = () => {
+        dispatch(addToCart({ ...product, qty }));
+        navigate("/cart");
     };
 
     return (
@@ -158,6 +164,7 @@ function ProductScreen() {
                                              : "bg-primary hover:bg-secondary text-white"
                                      }`}
                                         disabled={product.countInStock === 0}
+                                        onClick={addToCartHandler}
                                     >
                                         Ajouter dans le panier
                                     </button>
