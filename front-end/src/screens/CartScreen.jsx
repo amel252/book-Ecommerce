@@ -7,7 +7,7 @@ import { addToCart, removeFromCart } from "../slices/cartSlice";
 function CartScreen() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { cart } = useSelector((state) => state.cart);
+    const cart = useSelector((state) => state.cart) || { cartItems: [] };
     const { cartItems } = cart;
     const addToCartHandler = (product, qty) => {
         dispatch(addToCart({ ...product, qty }));
@@ -70,7 +70,7 @@ function CartScreen() {
                                         >
                                             {[
                                                 ...Array(
-                                                    product.countInStock
+                                                    item.countInStock
                                                 ).keys(),
                                             ].map((x) => (
                                                 <option
