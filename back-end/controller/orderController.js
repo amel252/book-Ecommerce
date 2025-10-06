@@ -2,11 +2,9 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import Order from "../models/orderModel.js";
 import Product from "../models/productModel.js";
 import { calcPrice } from "../utils/calcPrice.js";
-import { verifyPaypalPayment } from "../utils/paypal.js";
+import { checkIfNewTransaction, verifyPaypalPayment } from "../utils/paypal.js";
 
-// @desc    Ajouter une nouvelle commande
-// @route   POST /api/orders
-// @access  Privé
+// effectuer d'une commande
 const addOrderItems = asyncHandler(async (req, res) => {
     const { orderItems, shippingAddress, paymentMethod } = req.body;
 
@@ -36,7 +34,6 @@ const addOrderItems = asyncHandler(async (req, res) => {
             _id: undefined, // on enlève l’_id pour que Mongo en génère un nouveau
         };
     });
-    //  ---------------- nous avons arreté
     // On calcule les prix (articles, taxes, livraison, total)
     const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
         calcPrice(dbOrderItems);
@@ -59,17 +56,94 @@ const addOrderItems = asyncHandler(async (req, res) => {
     // On renvoie la réponse au client
     res.status(201).json(createdOrder);
 });
+
+const captureOrderPayment = asyncHandler(async (req, res) => {
+    const { id: orderId } = req.params; // local order ID
+    const { paypalId } = req.body; // PayPal order ID
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+        res.status(404);
+        throw new Error("Commande non trouvée");
+    }
+
+    // ✅ Capture PayPal payment
+    const capture = await capturePaypalOrder(paypalId);
+
+    // ✅ Update local order if success
+    if (capture.status === "COMPLETED") {
+        order.isPaid = true;
+        order.paidAt = Date.now();
+        order.paymentResult = {
+            id: capture.id,
+            status: capture.status,
+            update_time: capture.update_time,
+            email_address: capture.payer.email_address,
+        };
+
+        // reduce stock
+        for (const item of order.orderItems) {
+            const product = await Product.findById(item.product);
+            if (product) {
+                product.countInStock -= item.qty;
+                await product.save();
+            }
+        }
+
+        const updatedOrder = await order.save();
+        res.json(updatedOrder);
+    } else {
+        res.status(400);
+        throw new Error("Payment not completed");
+    }
+});
+
+// récuperation commande (user)
 const getMyOrder = asyncHandler(async (req, res) => {
+    const orders = await Order.find({ user: req.user._id });
+
+    res.status(200).json(orders);
+});
+// récuper commande a partir de son Id
+const getOrderById = asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id).populate(
         "user",
         "name email"
     );
+
     if (order) {
         res.status.json(order);
     } else {
         res.status(404);
-        throw new Eroor("commande non trouvée");
+        throw new Error("Commande non trouvé");
     }
 });
+// mise a jour une commande livré (admin)
+const updateOrderToDelivered = asyncHandler(async (req, res) => {
+    const order = await Order.findById(req.params.id);
 
-export { addOrderItems, getMyOrder };
+    if (order) {
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+        const updatedOrder = await order.save();
+
+        res.status(200).json(updatedOrder);
+    } else {
+        res.status(404);
+        throw new Error("Order not found");
+    }
+});
+// récuperérer toute les commandes (admin)
+const getOrders = asyncHandler(async (req, res) => {
+    const orders = await Order.find({}).populate("user", "id name");
+    res.json(orders);
+});
+
+export {
+    addOrderItems,
+    getMyOrder,
+    getOrderById,
+    updateOrderToDelivered,
+    getOrders,
+    captureOrderPayment,
+};
