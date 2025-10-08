@@ -35,8 +35,8 @@ const router = createBrowserRouter(
             {/* tester ca  */}
             <Route path="/cart" element={<CartScreen />} />
             <Route path="" element={<PrivateRoute />}>
-                <Route path="/shipping" element={<ShippingScreen />}></Route>
-                <Route path="/payment" element={<PaymentScreen />}></Route>
+                <Route path="/shipping" element={<ShippingScreen />} />
+                <Route path="/payment" element={<PaymentScreen />} />
             </Route>
         </Route>
     )

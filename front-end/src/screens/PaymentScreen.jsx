@@ -26,7 +26,10 @@ function PaymentScreen() {
         <div>
             <FormContainer>
                 <h1 className="text-2xl font-bold my-8">Methode de paiement</h1>
-                <form className="block text-sm font-medium text-gray-700">
+                <form
+                    onSubmit={submitHandler}
+                    className="block text-sm font-medium text-gray-700"
+                >
                     <div>
                         <label className="lock text-sm font-medium text-gray-700 mb-2">
                             Methode de paiement

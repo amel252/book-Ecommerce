@@ -12,7 +12,8 @@ function CartScreen() {
     const addToCartHandler = (product, qty) => {
         dispatch(addToCart({ ...product, qty }));
     };
-    const removeFromCardHandler = (id) => {
+
+    const removeFromCartHandler = (id) => {
         dispatch(removeFromCart(id));
     };
     const checkoutHandler = () => {
@@ -86,13 +87,58 @@ function CartScreen() {
                                         type="button"
                                         className="p-2 text-red-400 hover:text-red-700 transition-colors duration-300"
                                         onClick={() =>
-                                            removeFromCardHandler(item._id)
+                                            removeFromCartHandler(item._id)
                                         }
                                     >
                                         <FaTrash size={20} />
                                     </button>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                    {/* --------- */}
+                    <div className="lg:w-1/3">
+                        <div className="p-6 border border-gray-200 rounded-lg shadow-sm bg-white">
+                            <h2 className="text-xl font-bold mb-4 text-gray-800">
+                                Résumé du panier
+                            </h2>
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="text-gray-600">
+                                    Nombre total d'articles:
+                                </span>
+                                <span className="text-gray-800 font-semibold">
+                                    {cartItems.reduce(
+                                        (acc, item) => acc + item.qty,
+                                        0
+                                    )}
+                                </span>
+                            </div>
+                            <div className="flex justify-between items-center mb-6">
+                                <span className="text-gray-600">
+                                    Total Price:
+                                </span>
+                                <span className="text-2xl font-semibold text-black">
+                                    ${" "}
+                                    {parseFloat(
+                                        cartItems.reduce(
+                                            (acc, item) =>
+                                                acc + item.qty * item.price,
+                                            0
+                                        )
+                                    ).toFixed(2)}
+                                </span>
+                            </div>
+                            <button
+                                onClick={checkoutHandler}
+                                type="button"
+                                disabled={cartItems.length === 0}
+                                className="w-full text-white
+                            bg-primary rounded-lg hover:bg-secondary
+                             disabled:bg-gray-400 disabled:cursor-not-allowed
+                              transition-all duration-300 hover:scale-102 p-3"
+                            >
+                                Passer à la caisse
+                            </button>
                         </div>
                     </div>
                 </div>
