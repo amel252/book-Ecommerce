@@ -6,10 +6,10 @@ import {
     updateOrderToDelivered,
     getOrders,
     captureOrderPayment,
-} from "../controller/orderController";
+} from "../controller/orderController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
-router = express.Router();
+const router = express.Router();
 
 router.route("/").post(protect, addOrderItems).get(protect, admin, getOrders);
 router.route("/mine").get(protect, getMyOrder);
