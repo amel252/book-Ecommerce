@@ -40,7 +40,7 @@ function PaymentScreen() {
                                     type="radio"
                                     name="paymentMethod"
                                     value="Paypal"
-                                    checked={paymentMethod === Paypal}
+                                    checked={paymentMethod === "Paypal"}
                                     onChange={(e) =>
                                         setPaymentMethod(e.target.value)
                                     }
