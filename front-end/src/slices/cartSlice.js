@@ -28,11 +28,13 @@ const cartSlice = createSlice({
             }
             return updateCart(state, item);
         },
+
         removeFromCart: (state, action) => {
             // filtrer pour voir si id avant de le supprimé
             state.cartItems = state.cartItems.filter(
                 (x) => x._id !== action.payload
             );
+            return updateCart(state);
         },
         saveShippingAddress: (state, action) => {
             state.shippingAddress = action.payload;
@@ -45,9 +47,9 @@ const cartSlice = createSlice({
             localStorage.setItem("cart", JSON.stringify(state));
         },
         // vider completement le panier
-        clearCartItems: (state, action) => {
+        clearCartItems: (state) => {
             state.cartItems = [];
-            localStorage.setItem("cart", JSON.stringify(state));
+            return updateCart(state);
         },
         // renitialisé le panier aprés la modification (suppr ou ajout )
         resetCart: (state) => (state = initialState),

@@ -20,7 +20,7 @@ function PaymentScreen() {
     const submitHandler = (e) => {
         e.preventDefault();
         dispatch(savePaymentMethod(paymentMethod));
-        navigate("/placeholder");
+        navigate("/place-order");
     };
     return (
         <div>
@@ -31,7 +31,7 @@ function PaymentScreen() {
                     className="block text-sm font-medium text-gray-700"
                 >
                     <div>
-                        <label className="lock text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                             Methode de paiement
                         </label>
                         <div>
