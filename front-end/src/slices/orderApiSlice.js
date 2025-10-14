@@ -7,19 +7,23 @@ export const orderApiSlice = apiSlice.injectEndpoints({
                 url: ORDERS_URL,
                 method: "POST",
                 body: order,
+                // ajout ***
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
             }),
         }),
         getMyOrder: builder.query({
             query: () => ({
                 url: `${ORDERS_URL}/mine`,
             }),
-            keepUnuseDataFor: 5,
+            keepUnusedDataFor: 5,
         }),
         getOrderDetails: builder.query({
             query: (id) => ({
                 url: `${ORDERS_URL}/${id}`,
             }),
-            keepUnuseDataFor: 5,
+            keepUnusedDataFor: 5,
         }),
         deliverOrder: builder.mutation({
             query: (orderId) => ({
@@ -38,7 +42,7 @@ export const orderApiSlice = apiSlice.injectEndpoints({
             query: () => ({
                 url: ORDERS_URL,
             }),
-            keepUnuseDataFor: 5,
+            keepUnusedDataFor: 5,
         }),
         // c'est en plus + , elle est dans la function(captureOrderPayment) dans controller
         getPaypalClientId: builder.query({

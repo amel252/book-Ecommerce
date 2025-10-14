@@ -1,42 +1,153 @@
+// import dotenv from "dotenv";
+// dotenv.config();
+
+// //  on peut les renommer comme on veut
+// const { PAYPAL_CLIENT_ID, PAYPAL_APP_SECRET, PAYPAL_API_URL } = process.env;
+// async function getPaypalAccessToken() {
+//     const auth = Buffer.from(
+//         PAYPAL_CLIENT_ID + ":" + PAYPAL_APP_SECRET
+//     ).toString("base64");
+//     const url = `${PAYPAL_API_URL}/v1/oauth2/token`;
+//     const headers = {
+//         accept: "application/json",
+//         "accept-language": "fr_FR",
+//         Authorization: `Basic${auth}`,
+//     };
+//     const body = "grant_type=client_credentials";
+//     const response = await fetch(url, {
+//         method: "POST",
+//         headers,
+//         body,
+//     });
+//     if (!response.ok) throw new Error("Failed to get access token");
+//     const paypalData = await response.json();
+//     return paypalData.access_token;
+// }
+// export async function checkIfNewTransaction(orderModel, paypalTransactionId) {
+//     try {
+//         const orders = await orderModel.find({
+//             "paymentResult.id": paypalTransactionId,
+//         });
+//         return orders.lenght === 0;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+// export async function verifyPaypalPayment(paypalTransactionId) {
+//     const accessToken = await getPaypalAccessToken();
+//     const paypalResponse = await fetch(
+//         `${PAYPAL_API_URL}/v2/checkout/orders/${paypalTransactionId}`,
+//         {
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 Authorization: `Bearer ${accessToken}`,
+//             },
+//         }
+//     );
+//     if (!paypalResponse.ok) throw new Error("vérification de paiment échoué ");
+//     const paypalData = await paypalResponse.json();
+//     return {
+//         verified:
+//             paypalData.status === "COMPLETED"
+//                 ? value
+//                 : paypalData.purchase_units[0].amount.value,
+//     };
+// }
+
 import dotenv from "dotenv";
 dotenv.config();
 
-//  on peut les renommer comme on veut
 const { PAYPAL_CLIENT_ID, PAYPAL_APP_SECRET, PAYPAL_API_URL } = process.env;
+
+// 🔑 Get PayPal access token
 async function getPaypalAccessToken() {
     const auth = Buffer.from(
         PAYPAL_CLIENT_ID + ":" + PAYPAL_APP_SECRET
     ).toString("base64");
-    const url = `${PAYPAL_API_URL}/v1/oauth2/token`;
-    const headers = {
-        accept: "application/json",
-        "accept-language": "fr_FR",
-        Authorization: `Basic${auth}`,
-    };
-    const body = "grant_type=client_credentials";
-    const response = await fetch(url, {
+
+    const response = await fetch(`${PAYPAL_API_URL}/v1/oauth2/token`, {
         method: "POST",
-        headers,
-        body,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Accept: "application/json",
+            "Accept-Language": "en_US",
+            Authorization: `Basic ${auth}`,
+        },
+        body: "grant_type=client_credentials",
     });
-    if (!response.ok) throw new Error("Failed to get access token");
-    const paypalData = await response.json();
-    return paypalData.access_token;
-}
-export async function checkIfNewTransaction(orderModel, paypalTransactionId) {
-    try {
-        const orders = await orderModel.find({
-            "paymentResult.id": paypalTransactionId,
-        });
-        return orders.lenght === 0;
-    } catch (error) {
-        console.log(error);
+
+    if (!response.ok) {
+        const errorData = await response.text();
+        console.error("❌ PayPal token error:", errorData);
+        throw new Error("Failed to get access token");
     }
+
+    const data = await response.json();
+    return data.access_token;
 }
-export async function verifyPaypalPayment(paypalTransactionId) {
+
+// 🛒 Create PayPal order
+export async function createPaypalOrder(totalPrice) {
     const accessToken = await getPaypalAccessToken();
-    const paypalResponse = await fetch(
-        `${PAYPAL_API_URL}/v2/checkout/orders/${paypalTransactionId}`,
+
+    const response = await fetch(`${PAYPAL_API_URL}/v2/checkout/orders`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+            intent: "CAPTURE",
+            purchase_units: [
+                {
+                    amount: {
+                        currency_code: "USD", // or your store’s currency
+                        value: Number(totalPrice).toFixed(2), // ensure proper format
+                    },
+                },
+            ],
+        }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.text();
+        console.error("❌ PayPal create order error:", errorData);
+        throw new Error("Failed to create PayPal order");
+    }
+
+    return await response.json(); // { id, status, links }
+}
+
+// 💰 Capture PayPal payment
+export async function capturePaypalOrder(paypalOrderId) {
+    const accessToken = await getPaypalAccessToken();
+
+    const response = await fetch(
+        `${PAYPAL_API_URL}/v2/checkout/orders/${paypalOrderId}/capture`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+        }
+    );
+
+    if (!response.ok) {
+        const errorData = await response.text();
+        console.error("❌ PayPal capture error:", errorData);
+        throw new Error("Failed to capture PayPal order");
+    }
+
+    return await response.json(); // contains payer info, amount, status
+}
+
+// ✅ Verify payment (optional safeguard)
+export async function verifyPaypalPayment(paypalOrderId) {
+    const accessToken = await getPaypalAccessToken();
+
+    const response = await fetch(
+        `${PAYPAL_API_URL}/v2/checkout/orders/${paypalOrderId}`,
         {
             headers: {
                 "Content-Type": "application/json",
@@ -44,12 +155,16 @@ export async function verifyPaypalPayment(paypalTransactionId) {
             },
         }
     );
-    if (!paypalResponse.ok) throw new Error("vérification de paiment échoué ");
-    const paypalData = await paypalResponse.json();
+
+    if (!response.ok) {
+        const errorData = await response.text();
+        console.error("❌ PayPal verify error:", errorData);
+        throw new Error("Failed to verify PayPal order");
+    }
+
+    const data = await response.json();
     return {
-        verified:
-            paypalData.status === "COMPLETED"
-                ? value
-                : paypalData.purchase_units[0].amount.value,
+        verified: data.status === "COMPLETED",
+        value: data.purchase_units[0].amount.value,
     };
 }
