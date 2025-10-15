@@ -318,12 +318,13 @@ function OrderScreen() {
             try {
                 await payOrder({
                     orderId,
-                    details: {
-                        paypalId: details.id,
-                        status: details.status,
-                        update_time: details.update_time,
-                        email_address: details.payer.email_address,
-                    },
+                    paypalId: details.id,
+                    // details: {
+                    //     paypalId: details.id,
+                    //     status: details.status,
+                    //     update_time: details.update_time,
+                    //     email_address: details.payer.email_address,
+                    // },
                 }).unwrap();
                 await refetch();
                 toast.success("La commande a été effectuée avec succès");
