@@ -84,6 +84,7 @@ function ProfileScreen() {
                 </button>
             </div>
             <FormContainer>
+                {/*  */}
                 {activeTab === "profile" && (
                     <div className="bg-white rounded-lg shadow-md p-6">
                         <h2 className="text-2xl font-bold mb-4">Profile</h2>
@@ -183,10 +184,127 @@ function ProfileScreen() {
             {/* {activeTab === "orders" && (
                 <div className="bg-white p-6 rounded-l">
                     <h2 className="text-2xl-bold mb-4">Mes commandes</h2>
+                    {isLoading ? (
+                        <Loader />
+                    ) : error ? (
+                        <Message>{error?.data?.message || error.error}</Message>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            ID
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Date
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Totalité
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Payé
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Livré
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {orders.map((order) => (
+                                        <tr key={order.id} className=""></tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
-            )} */}
+            )}
+        </div>
+    );
+} */}
+            {activeTab === "orders" && (
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h2 className="text-2xl font-bold mb-4">Mes commandes</h2>
+                    {isLoading ? (
+                        <Loader />
+                    ) : error ? (
+                        <Message>{error?.data?.message || error.error}</Message>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Id
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Date
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Totalité
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Payé
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                            Livré
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide"></th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-y-200">
+                                    {orders.map((order) => (
+                                        <tr key={order._id}>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {order._id}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {order.createdAt.substring(
+                                                    0,
+                                                    10
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {order.totalPrice}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {order.isPaid ? (
+                                                    order.paidAt.substring(
+                                                        0,
+                                                        10
+                                                    )
+                                                ) : (
+                                                    <FaTimes className="text-red-500" />
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {order.isDelivered ? (
+                                                    order.deliveredAt.substring(
+                                                        0,
+                                                        10
+                                                    )
+                                                ) : (
+                                                    <FaTimes className="text-red-500" />
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <Link
+                                                    to={`/order/${order._id}`}
+                                                    className="text-primary hover:text-secondary"
+                                                >
+                                                    <FaEye size={20} />
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
-
 export default ProfileScreen;
