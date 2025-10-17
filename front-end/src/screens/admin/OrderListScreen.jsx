@@ -18,33 +18,33 @@ function OrderListScreen() {
                 </Message>
             ) : (
                 <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-100">
+                    <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray uppercase tracking-wider">
                                     id
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray uppercase tracking-wider">
                                     utilisateur
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray uppercase tracking-wider">
                                     date
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray uppercase tracking-wider">
                                     totale
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray uppercase tracking-wider">
                                     payé
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray uppercase tracking-wider">
                                     livré
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray uppercase tracking-wider">
                                     actions
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-gray-100">
                             {orders.map((order) => (
                                 <tr key={order._id}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
