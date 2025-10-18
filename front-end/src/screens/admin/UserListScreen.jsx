@@ -2,7 +2,7 @@ import { FaTrash, FaEdit, FaCheck, FaTimes } from "react-icons/fa";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import {
-    useDeleteMutation,
+    useDeleteUserMutation,
     useGetUsersQuery,
 } from "../../slices/usersApiSlice";
 import { toast } from "react-toastify";
@@ -12,7 +12,7 @@ function UserListScreen() {
     const { data: users, refetch, isLoading, error } = useGetUsersQuery();
     // afficher nos donné (users)
     console.log(users);
-    const [deleteUser] = useDeleteMutation();
+    const [deleteUser] = useDeleteUserMutation();
     const deleteHandler = async (id) => {
         if (window.confirm("Etes vous sur de supprimé l'utilisateur? ")) {
             try {
