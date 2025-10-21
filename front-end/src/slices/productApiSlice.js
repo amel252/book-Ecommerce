@@ -35,11 +35,12 @@ export const productApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ["product"],
         }),
+        // pas besoin de data pour supprimer
         deleteProduct: builder.mutation({
             query: (productId) => ({
                 url: `${PRODUCTS_URL}/${productId}`,
                 method: "DELETE",
-                body: data,
+                // body: data,
             }),
             invalidatesTags: ["product"],
         }),

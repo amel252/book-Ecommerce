@@ -15,7 +15,7 @@ cloudinary.v2.config({
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary.v2,
     params: {
-        folder: "e-commerce-book",
+        folder: "eCommerceBook",
         allowed_formats: ["png", "jpg", "jpeg", "webp"],
     },
 });

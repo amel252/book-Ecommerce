@@ -508,7 +508,21 @@ function OrderScreen() {
                                 )}
                             </div>
                         )}
+                        {/* si l'user est admin et commande payé passe a l'étape suivante */}
                         {loadingDeliver && <Loader />}
+                        {userInfo &&
+                            userInfo.isAdmin &&
+                            order.isPaid &&
+                            !order.isDelivered && (
+                                <div className="mt-6">
+                                    <button
+                                        className="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition-colors"
+                                        onClick={deliverHandler}
+                                    >
+                                        Pret à livrer
+                                    </button>
+                                </div>
+                            )}
                     </div>
                 </div>
             </div>

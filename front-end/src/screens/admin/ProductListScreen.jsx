@@ -11,7 +11,7 @@ import { useParams, Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 
 function ProductListScreen() {
-    const { pageNumber } = useParams;
+    const { pageNumber } = useParams();
     const { data, isLoading, error, refetch } = useGetProductsQuery({
         // Si ya pas de pageNumber on reste sur la 1ere page
         pageNumber: pageNumber || 1,
@@ -37,7 +37,6 @@ function ProductListScreen() {
                 const createdProduct = await createProduct({}).unwrap();
                 toast.success("Le product a été crée avec succes ");
                 window.location.href = `/admin/product/${createdProduct._id}/edit`;
-                refetch();
             } catch (error) {
                 toast.error(error?.data?.message);
             }
@@ -107,6 +106,16 @@ function ProductListScreen() {
                                                 >
                                                     <FaEdit size={20} />
                                                 </Link>
+                                                <button
+                                                    onClick={() =>
+                                                        deleteHandler(
+                                                            product._id
+                                                        )
+                                                    }
+                                                    className="text-red-500 hover:text-red-700"
+                                                >
+                                                    <FaTrash size={20} />
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
